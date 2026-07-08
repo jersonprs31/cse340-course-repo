@@ -1,12 +1,10 @@
-
+import 'dotenv/config';
 import express from 'express';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import { testConnection } from './src/models/db.js';
+import { getAllOrganizations } from './src/models/organizations.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
-
 // Set EJS as the view engine
 app.set('view engine', 'ejs');
 
@@ -19,9 +17,12 @@ app.get('/', (req, res) => {
     res.render('index', pageData);
 });
 
-app.get('/organizations', (req, res) => {
-    const pageData = { title: 'Organizations' };
-    res.render('organizations', pageData);
+app.get('/organizations', async (req, res) => {
+    const organizations = await getAllOrganizations();
+    const title = 'Our Partner Organizations';
+
+    // This passes the database data directly to your EJS file
+    res.render('organizations', { title, organizations });
 });
 
 app.get('/projects', (req, res) => {

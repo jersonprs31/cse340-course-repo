@@ -1,6 +1,15 @@
 <%- include('partials/header') %>
-<main class="container">
-    <h2>Our Partner Organizations</h2>
-    <p>Discover the groups making a difference.</p>
-</main>
+    <main>
+        <h1><%= title %></h1>
+        
+        <p>Here are a few of our partner organizations:</p>
+        <ul>
+            <% organizations.forEach(organization => { %>
+                <li>
+                    <img src="/images/<%= organization.logo_filename %>" alt="<%= organization.name %> logo">
+                    <strong><%= organization.name %></strong>: <%= organization.contact_email %>
+                </li>
+            <% }); %>
+        </ul>
+    </main>
 <%- include('partials/footer') %>
