@@ -2,17 +2,18 @@ import { Pool } from 'pg';
 
 /**
  * Connection pool for PostgreSQL database.
+ * Automatically configures SSL based on whether it's running locally or on Render.
  */
+const isProduction = process.env.NODE_ENV === 'production' || (process.env.DB_URL && process.env.DB_URL.includes('render.com'));
+
 const pool = new Pool({
     connectionString: process.env.DB_URL,
-    ssl: {
-        rejectUnauthorized: false
-    }
+    ssl: isProduction ? { rejectUnauthorized: false } : false
 });
 
 let db = null;
 
-if (process.env.NODE_ENV === 'development' && process.env.ENABLE_SQL_LOGGING === 'true') {
+if (process.env.NODE_ENV === 'development' || process.env.ENABLE_SQL_LOGGING === 'true') {
     db = {
         async query(text, params) {
             try {

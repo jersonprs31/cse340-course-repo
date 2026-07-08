@@ -1,6 +1,18 @@
 <%- include('partials/header') %>
-<main class="container">
-    <h2>Current Service Projects</h2>
-    <p>Sign up to help with these upcoming events.</p>
-</main>
+    <main>
+        <h1><%= title %></h1>
+        <p>Sign up for one of our upcoming events!</p>
+        
+        <div class="projects-grid">
+            <% projects.forEach(project => { %>
+                <div class="project-card">
+                    <h2><%= project.title %></h2>
+                    <p><strong>Host:</strong> <%= project.org_name %></p>
+                    <p><strong>Category:</strong> <%= project.category_name %></p>
+                    <p><strong>Date:</strong> <%= project.date.toDateString() %></p>
+                    <p><%= project.description %></p>
+                </div>
+            <% }); %>
+        </div>
+    </main>
 <%- include('partials/footer') %>
