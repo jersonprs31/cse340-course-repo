@@ -88,3 +88,17 @@ footer {
         padding: 1.5rem;
     }
 }
+
+
+.home-images {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.home-images img {
+    max-width: 150px; 
+    height: auto;
+}
