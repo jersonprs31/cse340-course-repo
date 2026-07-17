@@ -3,9 +3,15 @@
         <div class="project-details">
             <h1><%= project.title %></h1>
             
-            <p><strong>Date:</strong> <%= project.date.toDateString() %></p>
+            <!-- NEW: Category Tags Section -->
+            <div class="category-tags" style="margin-bottom: 1rem;">
+                <strong>Categories:</strong> 
+                <% categories.forEach(cat => { %>
+                    <a href="/category/<%= cat.category_id %>" style="margin-right: 10px; text-decoration: underline;"><%= cat.category_name %></a>
+                <% }); %>
+            </div>
             
-            <!-- Note: it isn't in my  database yet! -->
+            <p><strong>Date:</strong> <%= project.date.toDateString() %></p>
             
             <p>
                 <strong>Partner Organization:</strong> 

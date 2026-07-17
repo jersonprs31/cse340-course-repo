@@ -1,10 +1,12 @@
 <%- include('partials/header') %>
     <main>
         <h1><%= title %></h1>
-        <p>Explore our different areas of service:</p>
         <ul>
             <% categories.forEach(category => { %>
-                <li><strong><%= category.category_name %></strong></li>
+                <li>
+                    <!-- The category name is now a link -->
+                    <a href="/category/<%= category.category_id %>"><%= category.category_name %></a>
+                </li>
             <% }); %>
         </ul>
     </main>

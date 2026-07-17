@@ -1,0 +1,26 @@
+<%- include('partials/header') %>
+    <main>
+        <div class="organization-details">
+            <h1><%= organization.name %></h1>
+            <!-- Muestra el logo y el contacto -->
+            <p><strong>Contact:</strong> <%= organization.contact_email %></p>
+            <p><%= organization.description %></p>
+        </div>
+
+        <h2>Service Projects Hosted by <%= organization.name %></h2>
+        
+        <% if (projects.length > 0) { %>
+            <ul>
+                <% projects.forEach(project => { %>
+                    <li>
+                        <!-- El nombre del proyecto es un enlace a sus detalles -->
+                        <strong><a href="/project/<%= project.project_id %>"><%= project.title %></a></strong> 
+                        - <%= project.date.toDateString() %>
+                    </li>
+                <% }); %>
+            </ul>
+        <% } else { %>
+            <p>This organization has no upcoming projects.</p>
+        <% } %>
+    </main>
+<%- include('partials/footer') %>
