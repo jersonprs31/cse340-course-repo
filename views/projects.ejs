@@ -1,16 +1,20 @@
 <%- include('partials/header') %>
     <main>
         <h1><%= title %></h1>
-        <p>Sign up for one of our upcoming events!</p>
         
         <div class="projects-grid">
             <% projects.forEach(project => { %>
                 <div class="project-card">
-                    <h2><%= project.title %></h2>
-                    <p><strong>Host:</strong> <%= project.org_name %></p>
-                    <p><strong>Category:</strong> <%= project.category_name %></p>
+                    <!-- The title now links to the individual project page -->
+                    <h2><a href="/project/<%= project.project_id %>"><%= project.title %></a></h2>
+                    
+                    <!-- The organization name now links to the organization page -->
+                    <p>
+                        <strong>Host:</strong> 
+                        <a href="/organization/<%= project.organization_id %>"><%= project.organization_name %></a>
+                    </p>
+                    
                     <p><strong>Date:</strong> <%= project.date.toDateString() %></p>
-                    <p><%= project.description %></p>
                 </div>
             <% }); %>
         </div>

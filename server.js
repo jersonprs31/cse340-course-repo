@@ -3,7 +3,9 @@ import express from 'express';
 import { testConnection } from './src/models/db.js';
 import { getAllOrganizations } from './src/models/organizations.js';
 import { getAllCategories } from './src/models/categories.js';
-import { getAllProjects } from './src/models/projects.js';
+
+// 1. Import your new router
+import router from './src/routes.js'; 
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -13,6 +15,9 @@ app.set('view engine', 'ejs');
 
 // Serve static files from the public folder
 app.use(express.static('public'));
+
+// 2. Tell Express to use your new router for the project routes
+app.use('/', router);
 
 // ========================================
 // Routes
@@ -34,11 +39,7 @@ app.get('/categories', async (req, res) => {
     res.render('categories', { title, categories });
 });
 
-app.get('/projects', async (req, res) => {
-    const projects = await getAllProjects();
-    const title = 'Available Service Projects';
-    res.render('projects', { title, projects });
-});
+// The old app.get('/projects') route has been successfully deleted from here!
 
 // ========================================
 // Start Server
