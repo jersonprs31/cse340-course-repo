@@ -3,7 +3,7 @@
         <div class="project-details">
             <h1><%= project.title %></h1>
             
-            <!-- NEW: Category Tags Section -->
+           
             <div class="category-tags" style="margin-bottom: 1rem;">
                 <strong>Categories:</strong> 
                 <% categories.forEach(cat => { %>
@@ -12,6 +12,10 @@
             </div>
             
             <p><strong>Date:</strong> <%= project.date.toDateString() %></p>
+            
+            <!-- NEW: Added Location and Venue here -->
+            <p><strong>Location:</strong> <%= project.location %></p>
+            <p><strong>Venue:</strong> <%= project.venue %></p>
             
             <p>
                 <strong>Partner Organization:</strong> 
