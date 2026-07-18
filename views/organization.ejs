@@ -1,14 +1,23 @@
 <%- include('partials/header') %>
     <main>
-        <div class="organization-details">
+       
+        <div class="organization-details" style="display: flex; justify-content: space-between; align-items: flex-start; max-width: 900px; gap: 20px;">
             
-            <img src="/images/<%= organization.logo_filename %>" alt="Logo de <%= organization.name %>" style="float: right; max-width: 250px; margin-left: 20px;">
+          
+            <div>
+                <h1><%= organization.name %></h1>
+                <p><strong>Contact:</strong> <%= organization.contact_email %></p>
+                <p><%= organization.description %></p>
+            </div>
+
+            <!-- Imagen a la derecha -->
+            <img src="/images/<%= organization.logo_filename %>" alt="<%= organization.name %> logo" style="max-width: 250px;">
             
-            <h1><%= organization.name %></h1>
-            <p><strong>Contact:</strong> <%= organization.contact_email %></p>
-            <p><%= organization.description %></p>
         </div>
         
+       
+        <br>
+
         <h2>Service Projects Hosted by <%= organization.name %></h2>
         
         <% if (projects && projects.length > 0) { %>
