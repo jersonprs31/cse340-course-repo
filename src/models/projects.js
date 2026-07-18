@@ -3,7 +3,7 @@ import db from './db.js';
 // 1. Get the next upcoming projects (filtered and limited)
 const getUpcomingProjects = async (number_of_projects) => {
     const query = `
-        SELECT p.project_id, p.title, p.description, p.date, p.organization_id, o.name AS organization_name
+        SELECT p.project_id, p.title, p.description, p.date, p.location, p.venue, p.organization_id, o.name AS organization_name
         FROM public.project p
         JOIN public.organization o ON p.organization_id = o.organization_id
         WHERE p.date >= CURRENT_DATE
@@ -19,7 +19,7 @@ const getUpcomingProjects = async (number_of_projects) => {
 // 2. Get the details for a single specific project
 const getProjectDetails = async (id) => {
     const query = `
-        SELECT p.project_id, p.title, p.description, p.date, p.organization_id, o.name AS organization_name
+        SELECT p.project_id, p.title, p.description, p.date, p.location, p.venue, p.organization_id, o.name AS organization_name
         FROM public.project p
         JOIN public.organization o ON p.organization_id = o.organization_id
         WHERE p.project_id = $1;
