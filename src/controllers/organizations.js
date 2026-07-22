@@ -1,4 +1,9 @@
-import { getOrganizationById, getProjectsByOrganization, getAllOrganizations } from '../models/organizations.js';
+import { 
+    getOrganizationById, 
+    getProjectsByOrganization, 
+    getAllOrganizations, 
+    createOrganization 
+} from '../models/organizations.js';
 
 const showOrganizationsPage = async (req, res, next) => {
     try {
@@ -6,7 +11,30 @@ const showOrganizationsPage = async (req, res, next) => {
         const title = 'Our Partner Organizations';
         res.render('organizations', { title, organizations });
     } catch (error) {
-        next(error); // Passes errors to the 500 handler in server.js
+        next(error); 
+    }
+};
+
+const showNewOrganizationForm = async (req, res, next) => {
+    try {
+        const title = 'Add New Organization';
+        res.render('new-organization', { title });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const processNewOrganizationForm = async (req, res, next) => {
+    try {
+        const { name, description, contactEmail } = req.body;
+        const logoFilename = 'placeholder-logo.png'; 
+
+        const organizationId = await createOrganization(name, description, contactEmail, logoFilename);
+        
+        
+        res.redirect(`/organization/${organizationId}`);
+    } catch (error) {
+        next(error); 
     }
 };
 
@@ -17,7 +45,6 @@ const showOrganizationDetailsPage = async (req, res, next) => {
         const organization = await getOrganizationById(orgId);
         const projects = await getProjectsByOrganization(orgId);
         
-        // Triggers the 404 handler if the organization doesn't exist
         if (!organization) {
             return res.status(404).render('404', { title: '404 - Organization Not Found' });
         }
@@ -32,5 +59,9 @@ const showOrganizationDetailsPage = async (req, res, next) => {
     }
 };
 
-// Export both functions
-export { showOrganizationsPage, showOrganizationDetailsPage };
+export { 
+    showOrganizationsPage, 
+    showOrganizationDetailsPage,
+    showNewOrganizationForm,
+    processNewOrganizationForm
+};

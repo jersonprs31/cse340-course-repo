@@ -1,34 +1,25 @@
 import 'dotenv/config';
 import express from 'express';
 import { testConnection } from './src/models/db.js';
-// Models for organizations and categories have been successfully deleted from here!
 
-// 1. Import your new router
 import router from './src/routes.js'; 
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Set EJS as the view engine
 app.set('view engine', 'ejs');
-
-// Serve static files from the public folder
 app.use(express.static('public'));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
-// 2. Tell Express to use your new router for the project routes
-app.use('/', router);
 
-// ========================================
-// Routes
-// ========================================
 app.get('/', (req, res) => {
     const pageData = { title: 'Home' };
     res.render('index', pageData);
 });
 
-// ========================================
-// Error Handling
-// ========================================
+app.use('/', router);
+
 
 // 404 Catch-All - Triggers if no routes match the requested URL
 app.use((req, res, next) => {
