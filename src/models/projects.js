@@ -1,6 +1,5 @@
 import db from './db.js';
 
-// 1. Get the next upcoming projects (filtered and limited)
 const getUpcomingProjects = async (number_of_projects) => {
     const query = `
         SELECT p.project_id, p.title, p.description, p.date, p.location, p.venue, p.organization_id, o.name AS organization_name
@@ -11,12 +10,11 @@ const getUpcomingProjects = async (number_of_projects) => {
         LIMIT $1;
     `;
     
-    // We pass number_of_projects as an array to replace the $1 placeholder
+    
     const result = await db.query(query, [number_of_projects]);
     return result.rows;
 };
 
-// 2. Get the details for a single specific project
 const getProjectDetails = async (id) => {
     const query = `
         SELECT p.project_id, p.title, p.description, p.date, p.location, p.venue, p.organization_id, o.name AS organization_name
@@ -25,12 +23,29 @@ const getProjectDetails = async (id) => {
         WHERE p.project_id = $1;
     `;
     
-    // We pass id as an array to replace the $1 placeholder
+    
     const result = await db.query(query, [id]);
     
-    // Since I only want ONE project, we return the first item in the rows array
     return result.rows[0]; 
 };
 
-// Export the new functions so your controllers can use them
-export { getUpcomingProjects, getProjectDetails };
+const updateProject = async (id, title, description, date, location, venue, organization_id) => {
+    const query = `
+        UPDATE public.project 
+        SET title = $1, description = $2, date = $3, location = $4, venue = $5, organization_id = $6
+        WHERE project_id = $7
+        RETURNING project_id;
+    `;
+    
+   
+    const queryParams = [title, description, date, location, venue, organization_id, id];
+    const result = await db.query(query, queryParams);
+
+    if (result.rows.length === 0) {
+        throw new Error('Failed to update project. Project may not exist.');
+    }
+
+    return result.rows[0].project_id;
+};
+
+export { getUpcomingProjects, getProjectDetails, updateProject };
