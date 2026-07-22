@@ -1,8 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import { testConnection } from './src/models/db.js';
-import { getAllOrganizations } from './src/models/organizations.js';
-import { getAllCategories } from './src/models/categories.js';
+// Models for organizations and categories have been successfully deleted from here!
 
 // 1. Import your new router
 import router from './src/routes.js'; 
@@ -27,19 +26,20 @@ app.get('/', (req, res) => {
     res.render('index', pageData);
 });
 
-app.get('/organizations', async (req, res) => {
-    const organizations = await getAllOrganizations();
-    const title = 'Our Partner Organizations';
-    res.render('organizations', { title, organizations });
+// ========================================
+// Error Handling
+// ========================================
+
+// 404 Catch-All - Triggers if no routes match the requested URL
+app.use((req, res, next) => {
+    res.status(404).render('404', { title: '404 - Page Not Found' });
 });
 
-app.get('/categories', async (req, res) => {
-    const categories = await getAllCategories();
-    const title = 'Service Categories';
-    res.render('categories', { title, categories });
+// 500 Global Error Handler - Triggers if a controller throws an error
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).render('500', { title: '500 - Internal Server Error' });
 });
-
-// The old app.get('/projects') route has been successfully deleted from here!
 
 // ========================================
 // Start Server
