@@ -19,7 +19,14 @@ const showProjectDetailsPage = async (req, res, next) => {
             return res.status(404).render('404', { title: '404 - Project Not Found' });
         }
 
-        const categories = project.categories || [];
+        
+        let categories = [];
+        if (project.category_id && project.category_name) {
+            categories.push({
+                category_id: project.category_id,
+                category_name: project.category_name
+            });
+        }
         
         res.render('project', { 
             title: project.title, 

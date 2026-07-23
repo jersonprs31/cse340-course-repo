@@ -10,19 +10,18 @@ const getUpcomingProjects = async (number_of_projects) => {
         LIMIT $1;
     `;
     
-    
     const result = await db.query(query, [number_of_projects]);
     return result.rows;
 };
 
 const getProjectDetails = async (id) => {
     const query = `
-        SELECT p.project_id, p.title, p.description, p.date, p.location, p.venue, p.organization_id, o.name AS organization_name
+        SELECT p.project_id, p.title, p.description, p.date, p.location, p.venue, p.organization_id, p.category_id, o.name AS organization_name, c.category_name
         FROM public.project p
         JOIN public.organization o ON p.organization_id = o.organization_id
+        LEFT JOIN public.category c ON p.category_id = c.category_id
         WHERE p.project_id = $1;
     `;
-    
     
     const result = await db.query(query, [id]);
     
@@ -37,7 +36,6 @@ const updateProject = async (id, title, description, date, location, venue, orga
         RETURNING project_id;
     `;
     
-   
     const queryParams = [title, description, date, location, venue, organization_id, id];
     const result = await db.query(query, queryParams);
 
