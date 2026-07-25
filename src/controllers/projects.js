@@ -1,5 +1,6 @@
-import { getUpcomingProjects, getProjectDetails, updateProject } from '../models/projects.js';
+import { getUpcomingProjects, getProjectDetails, updateProject, getProjectCategories, updateProjectCategories } from '../models/projects.js';
 import { getAllOrganizations } from '../models/organizations.js';
+import { getAllCategories } from '../models/categories.js';
 
 const showProjectsPage = async (req, res, next) => {
     try {
@@ -19,14 +20,7 @@ const showProjectDetailsPage = async (req, res, next) => {
             return res.status(404).render('404', { title: '404 - Project Not Found' });
         }
 
-        
-        let categories = [];
-        if (project.category_id && project.category_name) {
-            categories.push({
-                category_id: project.category_id,
-                category_name: project.category_name
-            });
-        }
+        const categories = await getProjectCategories(projectId);
         
         res.render('project', { 
             title: project.title, 
@@ -72,9 +66,44 @@ const processEditProjectForm = async (req, res, next) => {
     }
 };
 
+const showAssignCategoriesForm = async (req, res, next) => {
+    try {
+        const projectId = req.params.id;
+        const project = await getProjectDetails(projectId);
+        const allCategories = await getAllCategories();
+        const projectCategories = await getProjectCategories(projectId);
+        
+        const assignedCategoryIds = projectCategories.map(c => c.category_id);
+
+        res.render('assign-categories', {
+            title: 'Assign Categories',
+            project,
+            allCategories,
+            assignedCategoryIds
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const processAssignCategoriesForm = async (req, res, next) => {
+    try {
+        const projectId = req.params.id;
+        const { categories } = req.body;
+        
+        await updateProjectCategories(projectId, categories);
+        
+        res.redirect(`/project/${projectId}`);
+    } catch (error) {
+        next(error);
+    }
+};
+
 export { 
     showProjectsPage, 
     showProjectDetailsPage, 
     showEditProjectForm, 
-    processEditProjectForm 
+    processEditProjectForm,
+    showAssignCategoriesForm,
+    processAssignCategoriesForm
 };

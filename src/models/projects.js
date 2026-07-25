@@ -16,15 +16,13 @@ const getUpcomingProjects = async (number_of_projects) => {
 
 const getProjectDetails = async (id) => {
     const query = `
-        SELECT p.project_id, p.title, p.description, p.date, p.location, p.venue, p.organization_id, p.category_id, o.name AS organization_name, c.category_name
+        SELECT p.project_id, p.title, p.description, p.date, p.location, p.venue, p.organization_id, o.name AS organization_name
         FROM public.project p
         JOIN public.organization o ON p.organization_id = o.organization_id
-        LEFT JOIN public.category c ON p.category_id = c.category_id
         WHERE p.project_id = $1;
     `;
     
     const result = await db.query(query, [id]);
-    
     return result.rows[0]; 
 };
 
@@ -46,4 +44,36 @@ const updateProject = async (id, title, description, date, location, venue, orga
     return result.rows[0].project_id;
 };
 
-export { getUpcomingProjects, getProjectDetails, updateProject };
+const getProjectCategories = async (projectId) => {
+    const query = `
+        SELECT c.category_id, c.category_name 
+        FROM public.category c
+        JOIN public.project_category pc ON c.category_id = pc.category_id
+        WHERE pc.project_id = $1;
+    `;
+    const result = await db.query(query, [projectId]);
+    return result.rows;
+};
+
+const updateProjectCategories = async (projectId, categoryIds) => {
+    await db.query(`DELETE FROM public.project_category WHERE project_id = $1`, [projectId]);
+    
+    if (categoryIds) {
+        const ids = Array.isArray(categoryIds) ? categoryIds : [categoryIds];
+        
+        for (let catId of ids) {
+            await db.query(
+                `INSERT INTO public.project_category (project_id, category_id) VALUES ($1, $2)`, 
+                [projectId, catId]
+            );
+        }
+    }
+};
+
+export { 
+    getUpcomingProjects, 
+    getProjectDetails, 
+    updateProject,
+    getProjectCategories,
+    updateProjectCategories
+};

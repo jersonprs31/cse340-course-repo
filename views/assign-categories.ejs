@@ -1,0 +1,32 @@
+<%- include('partials/header') %>
+<main>
+    <h1>Assign Categories for: <%= project.title %></h1>
+    
+    <form action="/project/<%= project.project_id %>/assign-categories" method="POST">
+        <fieldset style="margin-bottom: 20px; padding: 15px;">
+            <legend>Select Categories:</legend>
+            
+            <% if (allCategories && allCategories.length > 0) { %>
+                <% allCategories.forEach(category => { %>
+                    <div style="margin-bottom: 10px;">
+                        <input 
+                            type="checkbox" 
+                            id="cat_<%= category.category_id %>" 
+                            name="categories" 
+                            value="<%= category.category_id %>"
+                            <%= assignedCategoryIds.includes(category.category_id) ? 'checked' : '' %>
+                        >
+                        <label for="cat_<%= category.category_id %>"><%= category.category_name %></label>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p>No categories available in the system.</p>
+            <% } %>
+            
+        </fieldset>
+        
+        <button type="submit" style="padding: 10px 15px; background-color: #0056b3; color: white; border: none; cursor: pointer;">Save Categories</button>
+        <a href="/project/<%= project.project_id %>" style="margin-left: 10px; text-decoration: none; color: #333;">Cancel</a>
+    </form>
+</main>
+<%- include('partials/footer') %>

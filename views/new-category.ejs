@@ -1,0 +1,20 @@
+<%- include('partials/header') %>
+<main>
+    <h1><%= title %></h1>
+
+
+    <% if (typeof error !== 'undefined' && error) { %>
+        <div style="color: #721c24; background-color: #f8d7da; padding: 10px; border: 1px solid #f5c6cb; margin-bottom: 15px; border-radius: 5px;">
+            <strong>Error:</strong> <%= error %>
+        </div>
+    <% } %>
+
+    <form action="/new-category" method="POST">
+        <div class="form-group" style="margin-bottom: 15px;">
+            <label for="category_name" style="display: block; margin-bottom: 5px;">Category Name</label>
+            <input type="text" id="category_name" name="category_name" value="<%= typeof category_name !== 'undefined' ? category_name : '' %>" required maxlength="100" style="width: 100%; padding: 8px; box-sizing: border-box;" />
+        </div>
+        <button type="submit" style="padding: 10px 15px; background-color: #0056b3; color: white; border: none; cursor: pointer;">Create Category</button>
+    </form>
+</main>
+<%- include('partials/footer') %>

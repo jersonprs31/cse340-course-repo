@@ -1,47 +1,46 @@
 import db from './db.js';
 
-
 const getAllCategories = async () => {
-    const query = 'SELECT * FROM public.category ORDER BY category_name ASC';
+    const query = `SELECT category_id, category_name FROM public.category ORDER BY category_name ASC;`;
     const result = await db.query(query);
     return result.rows;
 };
 
-
-const getCategoryById = async (id) => {
-    const query = 'SELECT * FROM public.category WHERE category_id = $1';
+const getCategoryDetails = async (id) => {
+    const query = `SELECT category_id, category_name FROM public.category WHERE category_id = $1;`;
     const result = await db.query(query, [id]);
     return result.rows[0];
 };
 
-
-const getProjectsByCategory = async (categoryId) => {
+const addCategory = async (category_name) => {
     const query = `
-        SELECT p.project_id, p.title, p.description, p.date, p.organization_id, o.name AS organization_name
-        FROM public.project p
-        JOIN public.organization o ON p.organization_id = o.organization_id
-        WHERE p.category_id = $1
-        ORDER BY p.date ASC;
+        INSERT INTO public.category (category_name) 
+        VALUES ($1) 
+        RETURNING category_id;
     `;
-    const result = await db.query(query, [categoryId]);
-    return result.rows;
+    const result = await db.query(query, [category_name]);
+    return result.rows[0].category_id;
 };
 
-
-const getCategoriesByProject = async (projectId) => {
+const updateCategory = async (id, category_name) => {
     const query = `
-        SELECT c.category_id, c.category_name
-        FROM public.category c
-        JOIN public.project p ON c.category_id = p.category_id
-        WHERE p.project_id = $1;
+        UPDATE public.category 
+        SET category_name = $1 
+        WHERE category_id = $2 
+        RETURNING category_id;
     `;
-    const result = await db.query(query, [projectId]);
-    return result.rows;
+    const result = await db.query(query, [category_name, id]);
+    
+    if (result.rows.length === 0) {
+        throw new Error('Failed to update category. Category may not exist.');
+    }
+    
+    return result.rows[0].category_id;
 };
 
 export { 
     getAllCategories, 
-    getCategoryById, 
-    getProjectsByCategory, 
-    getCategoriesByProject 
+    getCategoryDetails, 
+    addCategory, 
+    updateCategory 
 };
