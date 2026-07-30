@@ -1,24 +1,21 @@
 <%- include('partials/header') %>
-    <main>
-        <h1><%= title %></h1>
-        
-        <p>Here are a few of our partner organizations:</p>
-        <ul>
-            <% organizations.forEach(organization => { %>
-                <li>
-                    <img src="/images/<%= organization.logo_filename %>" alt="<%= organization.name %> logo">
-                    <br>
-                    <strong><a href="/organization/<%= organization.organization_id %>"><%= organization.name %></a></strong>
-                    <p>Email: <%= organization.contact_email %></p>
-                    <p><%= organization.description %></p>
-                </li>
-            <% }); %>
-        </ul>
+<main>
+    <h1><%= title %></h1>
 
-        
-        <p style="margin-top: 2rem;">
-            <a href="/new-organization" style="font-weight: bold; text-decoration: underline;">Add a new organization</a>
-        </p>
-    </main>
+    <div style="margin-bottom: 20px;">
+        <a href="/new-organization" style="padding: 10px 15px; background-color: #0056b3; color: white; text-decoration: none; border-radius: 5px; display: inline-block;">+ Create New Organization</a>
+    </div>
+
+    <% if (organizations && organizations.length > 0) { %>
+        <ul style="list-style-type: none; padding: 0;">
+            <% organizations.forEach(org => { %>
+                <li style="margin-bottom: 10px;">
+                    <a href="/organization/<%= org.organization_id %>" style="color: purple; text-decoration: underline; font-size: 1.1em;"><%= org.name %></a>
+                </li>
+            <% }) %>
+        </ul>
+    <% } else { %>
+        <p>No organizations found.</p>
+    <% } %>
+</main>
 <%- include('partials/footer') %>
-   

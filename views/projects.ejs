@@ -1,22 +1,21 @@
 <%- include('partials/header') %>
-    <main>
-        <h1><%= title %></h1>
-        
-        <div class="projects-grid">
-            <% projects.forEach(project => { %>
-                <div class="project-card">
-                    <!-- The title now links to the individual project page -->
-                    <h2><a href="/project/<%= project.project_id %>"><%= project.title %></a></h2>
-                    
-                    <!-- The organization name now links to the organization page -->
-                    <p>
-                        <strong>Host:</strong> 
-                        <a href="/organization/<%= project.organization_id %>"><%= project.organization_name %></a>
-                    </p>
-                    
-                    <p><strong>Date:</strong> <%= project.date.toDateString() %></p>
-                </div>
-            <% }); %>
-        </div>
-    </main>
+<main>
+    <h1>Service Projects</h1>
+
+    <div style="margin-bottom: 20px;">
+        <a href="/new-project" style="padding: 10px 15px; background-color: #0056b3; color: white; text-decoration: none; border-radius: 5px; display: inline-block;">+ Create New Project</a>
+    </div>
+
+    <% if (projects && projects.length > 0) { %>
+        <% projects.forEach(project => { %>
+            <div style="margin-bottom: 15px;">
+                <h2><a href="/project/<%= project.project_id %>" style="color: purple;"><%= project.title %></a></h2>
+                <p style="margin: 3px 0;"><strong>Host:</strong> <a href="/organization/<%= project.organization_id %>" style="color: purple;"><%= project.organization_name %></a></p>
+                <p style="margin: 3px 0;"><strong>Date:</strong> <%= new Date(project.date).toDateString() %></p>
+            </div>
+        <% }) %>
+    <% } else { %>
+        <p>No projects found.</p>
+    <% } %>
+</main>
 <%- include('partials/footer') %>

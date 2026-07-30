@@ -1,13 +1,21 @@
 <%- include('partials/header') %>
-    <main>
-        <h1><%= title %></h1>
-        <ul>
+<main>
+    <h1>Service Categories</h1>
+
+    <div style="margin-bottom: 20px;">
+        <a href="/new-category" style="padding: 10px 15px; background-color: #0056b3; color: white; text-decoration: none; border-radius: 5px; display: inline-block;">+ Create New Category</a>
+    </div>
+
+    <% if (categories && categories.length > 0) { %>
+        <ul style="list-style-type: none; padding: 0;">
             <% categories.forEach(category => { %>
-                <li>
-                    <!-- The category name is now a link -->
-                    <a href="/category/<%= category.category_id %>"><%= category.category_name %></a>
+                <li style="margin-bottom: 10px;">
+                    <a href="/category/<%= category.category_id %>" style="color: purple; text-decoration: underline; font-size: 1.1em;"><%= category.category_name %></a>
                 </li>
-            <% }); %>
+            <% }) %>
         </ul>
-    </main>
+    <% } else { %>
+        <p>No categories found.</p>
+    <% } %>
+</main>
 <%- include('partials/footer') %>
