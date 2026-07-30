@@ -2,7 +2,8 @@ import {
     getOrganizationById, 
     getProjectsByOrganization, 
     getAllOrganizations, 
-    createOrganization 
+    createOrganization,
+    updateOrganization
 } from '../models/organizations.js';
 
 const showOrganizationsPage = async (req, res, next) => {
@@ -31,7 +32,6 @@ const processNewOrganizationForm = async (req, res, next) => {
 
         const organizationId = await createOrganization(name, description, contactEmail, logoFilename);
         
-        
         res.redirect(`/organization/${organizationId}`);
     } catch (error) {
         next(error); 
@@ -59,9 +59,39 @@ const showOrganizationDetailsPage = async (req, res, next) => {
     }
 };
 
+const showEditOrganizationForm = async (req, res, next) => {
+    try {
+        const orgId = req.params.id;
+        const organization = await getOrganizationById(orgId); 
+        
+        if (!organization) {
+            return res.status(404).render('404', { title: '404 - Organization Not Found' });
+        }
+
+        res.render('edit-organization', { title: 'Edit Organization', organization });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const processEditOrganizationForm = async (req, res, next) => {
+    try {
+        const orgId = req.params.id;
+        const { name, description, contactEmail } = req.body;
+        
+        await updateOrganization(orgId, name, description, contactEmail);
+        
+        res.redirect(`/organization/${orgId}`);
+    } catch (error) {
+        next(error);
+    }
+};
+
 export { 
     showOrganizationsPage, 
     showOrganizationDetailsPage,
     showNewOrganizationForm,
-    processNewOrganizationForm
+    processNewOrganizationForm,
+    showEditOrganizationForm,
+    processEditOrganizationForm
 };

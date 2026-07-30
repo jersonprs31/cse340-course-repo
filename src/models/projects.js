@@ -26,6 +26,16 @@ const getProjectDetails = async (id) => {
     return result.rows[0]; 
 };
 
+const addProject = async (title, description, date, location, venue, organization_id) => {
+    const query = `
+        INSERT INTO public.project (title, description, date, location, venue, organization_id) 
+        VALUES ($1, $2, $3, $4, $5, $6) 
+        RETURNING project_id;
+    `;
+    const result = await db.query(query, [title, description, date, location, venue, organization_id]);
+    return result.rows[0].project_id;
+};
+
 const updateProject = async (id, title, description, date, location, venue, organization_id) => {
     const query = `
         UPDATE public.project 
@@ -72,7 +82,8 @@ const updateProjectCategories = async (projectId, categoryIds) => {
 
 export { 
     getUpcomingProjects, 
-    getProjectDetails, 
+    getProjectDetails,
+    addProject, 
     updateProject,
     getProjectCategories,
     updateProjectCategories

@@ -48,7 +48,6 @@ const processNewCategoryForm = async (req, res, next) => {
         }
 
         await addCategory(category_name);
-        req.flash('success', 'Category created successfully!');
         res.redirect('/categories'); 
     } catch (error) {
         next(error);
@@ -93,7 +92,6 @@ const processEditCategoryForm = async (req, res, next) => {
         }
 
         await updateCategory(categoryId, category_name);
-        req.flash('success', 'Category updated successfully!');
         res.redirect(`/category/${categoryId}`); 
     } catch (error) {
         next(error);

@@ -1,4 +1,4 @@
-import { getUpcomingProjects, getProjectDetails, updateProject, getProjectCategories, updateProjectCategories } from '../models/projects.js';
+import { getUpcomingProjects, getProjectDetails, addProject, updateProject, getProjectCategories, updateProjectCategories } from '../models/projects.js';
 import { getAllOrganizations } from '../models/organizations.js';
 import { getAllCategories } from '../models/categories.js';
 
@@ -32,6 +32,26 @@ const showProjectDetailsPage = async (req, res, next) => {
     }
 };
 
+const showNewProjectForm = async (req, res, next) => {
+    try {
+        const organizations = await getAllOrganizations();
+        res.render('new-project', { title: 'Add New Project', organizations });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const processNewProjectForm = async (req, res, next) => {
+    try {
+        const { title, description, date, location, venue, organization_id } = req.body;
+        const newProjectId = await addProject(title, description, date, location, venue, organization_id);
+        
+        res.redirect(`/project/${newProjectId}`);
+    } catch (error) {
+        next(error);
+    }
+};
+
 const showEditProjectForm = async (req, res, next) => {
     try {
         const projectId = req.params.id;
@@ -59,7 +79,6 @@ const processEditProjectForm = async (req, res, next) => {
         
         await updateProject(projectId, title, description, date, location, venue, organization_id);
         
-        req.flash('success', 'Project updated successfully!');
         res.redirect(`/project/${projectId}`);
     } catch (error) {
         next(error);
@@ -102,6 +121,8 @@ const processAssignCategoriesForm = async (req, res, next) => {
 export { 
     showProjectsPage, 
     showProjectDetailsPage, 
+    showNewProjectForm,
+    processNewProjectForm,
     showEditProjectForm, 
     processEditProjectForm,
     showAssignCategoriesForm,
