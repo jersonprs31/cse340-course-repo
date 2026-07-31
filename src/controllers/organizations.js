@@ -19,7 +19,7 @@ const showOrganizationsPage = async (req, res, next) => {
 const showNewOrganizationForm = async (req, res, next) => {
     try {
         const title = 'Add New Organization';
-        res.render('new-organization', { title });
+        res.render('new-organization', { title, error: null });
     } catch (error) {
         next(error);
     }
@@ -30,8 +30,12 @@ const processNewOrganizationForm = async (req, res, next) => {
         const { name, description, contactEmail } = req.body;
         const logoFilename = 'placeholder-logo.png'; 
 
+        // Server-side validation
+        if (!name || !description || !contactEmail) {
+            return res.render('new-organization', { title: 'Add New Organization', error: 'All fields are required.' });
+        }
+
         const organizationId = await createOrganization(name, description, contactEmail, logoFilename);
-        
         res.redirect(`/organization/${organizationId}`);
     } catch (error) {
         next(error); 
@@ -68,7 +72,7 @@ const showEditOrganizationForm = async (req, res, next) => {
             return res.status(404).render('404', { title: '404 - Organization Not Found' });
         }
 
-        res.render('edit-organization', { title: 'Edit Organization', organization });
+        res.render('edit-organization', { title: 'Edit Organization', organization, error: null });
     } catch (error) {
         next(error);
     }
@@ -79,8 +83,13 @@ const processEditOrganizationForm = async (req, res, next) => {
         const orgId = req.params.id;
         const { name, description, contactEmail } = req.body;
         
+        // Server-side validation 
+        if (!name || !description || !contactEmail) {
+            const organization = { organization_id: orgId, name, description, contact_email: contactEmail };
+            return res.render('edit-organization', { title: 'Edit Organization', organization, error: 'All fields are required.' });
+        }
+
         await updateOrganization(orgId, name, description, contactEmail);
-        
         res.redirect(`/organization/${orgId}`);
     } catch (error) {
         next(error);

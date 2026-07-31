@@ -1,4 +1,4 @@
-import db from './db.js';
+import db from './db.js'; // Make sure this path points correctly to your database file
 
 const getAllOrganizations = async () => {
     const query = 'SELECT * FROM public.organization ORDER BY name ASC';

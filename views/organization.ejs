@@ -6,11 +6,17 @@
           
             <div>
                 <h1><%= organization.name %></h1>
+                
+               
+                <p style="margin-top: -10px; margin-bottom: 20px;">
+                    <a href="/edit-organization/<%= organization.organization_id %>" style="font-weight: bold; color: #0056b3; text-decoration: none;">[ Edit Organization ]</a>
+                </p>
+
                 <p><strong>Contact:</strong> <%= organization.contact_email %></p>
                 <p><%= organization.description %></p>
             </div>
 
-            <!-- Imagen a la derecha -->
+            
             <img src="/images/<%= organization.logo_filename %>" alt="<%= organization.name %> logo" style="max-width: 250px;">
             
         </div>
