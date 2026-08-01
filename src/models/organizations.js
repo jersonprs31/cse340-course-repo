@@ -1,13 +1,13 @@
-import db from './db.js'; // Make sure this path points correctly to your database file
+import db from './db.js';
 
 const getAllOrganizations = async () => {
-    const query = 'SELECT * FROM public.organization ORDER BY name ASC';
+    const query = 'SELECT * FROM organization ORDER BY name ASC';
     const result = await db.query(query);
     return result.rows;
 };
 
 const getOrganizationById = async (id) => {
-    const query = 'SELECT * FROM public.organization WHERE organization_id = $1';
+    const query = 'SELECT * FROM organization WHERE organization_id = $1';
     const result = await db.query(query, [id]);
     return result.rows[0];
 };
@@ -15,7 +15,7 @@ const getOrganizationById = async (id) => {
 const getProjectsByOrganization = async (orgId) => {
     const query = `
         SELECT project_id, title, description, date 
-        FROM public.project 
+        FROM project 
         WHERE organization_id = $1 
         ORDER BY date ASC;
     `;
@@ -25,7 +25,7 @@ const getProjectsByOrganization = async (orgId) => {
 
 const createOrganization = async (name, description, contactEmail, logoFilename) => {
     const query = `
-      INSERT INTO public.organization (name, description, contact_email, logo_filename)
+      INSERT INTO organization (name, description, contact_email, logo_filename)
       VALUES ($1, $2, $3, $4)
       RETURNING organization_id
     `;
@@ -42,7 +42,7 @@ const createOrganization = async (name, description, contactEmail, logoFilename)
 
 const updateOrganization = async (id, name, description, contactEmail) => {
     const query = `
-        UPDATE public.organization 
+        UPDATE organization 
         SET name = $1, description = $2, contact_email = $3
         WHERE organization_id = $4 
         RETURNING organization_id;
