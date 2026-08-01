@@ -1,10 +1,9 @@
 import express from 'express';
 
-// 1. Project Controllers
 import { 
     showProjectsPage, 
     showProjectDetailsPage,
-    showNewProjectForm,           
+    showNewProjectForm,          
     processNewProjectForm,        
     showEditProjectForm,
     processEditProjectForm,
@@ -12,7 +11,6 @@ import {
     processAssignCategoriesForm
 } from './controllers/projects.js';
 
-// 2. Category Controllers
 import { 
     showCategoriesPage, 
     showCategoryDetailsPage,
@@ -22,7 +20,6 @@ import {
     processEditCategoryForm
 } from './controllers/categories.js'; 
 
-// 3. Organization Controllers
 import { 
     showOrganizationsPage, 
     showOrganizationDetailsPage,
@@ -32,9 +29,17 @@ import {
     processEditOrganizationForm   
 } from './controllers/organizations.js';
 
+// Consolidate all user imports into this single block
+import { 
+    showUserRegistrationForm, 
+    processUserRegistrationForm,
+    showLoginForm,
+    processLoginForm,
+    processLogout
+} from './controllers/users.js';
+
 const router = express.Router();
 
-// --- PROJECT ROUTES ---
 router.get('/projects', showProjectsPage);
 router.get('/new-project', showNewProjectForm);     
 router.post('/new-project', processNewProjectForm); 
@@ -44,7 +49,6 @@ router.post('/edit-project/:id', processEditProjectForm);
 router.get('/project/:id/assign-categories', showAssignCategoriesForm);
 router.post('/project/:id/assign-categories', processAssignCategoriesForm);
 
-// --- CATEGORY ROUTES ---
 router.get('/categories', showCategoriesPage);
 router.get('/new-category', showNewCategoryForm);
 router.post('/new-category', processNewCategoryForm);
@@ -52,12 +56,17 @@ router.get('/edit-category/:id', showEditCategoryForm);
 router.post('/edit-category/:id', processEditCategoryForm);
 router.get('/category/:id', showCategoryDetailsPage);
 
-// --- ORGANIZATION ROUTES ---
 router.get('/organizations', showOrganizationsPage);
 router.get('/new-organization', showNewOrganizationForm);
 router.post('/new-organization', processNewOrganizationForm);
-router.get('/edit-organization/:id', showEditOrganizationForm);   // Added
-router.post('/edit-organization/:id', processEditOrganizationForm); // Added
+router.get('/edit-organization/:id', showEditOrganizationForm);   
+router.post('/edit-organization/:id', processEditOrganizationForm); 
 router.get('/organization/:id', showOrganizationDetailsPage);
+
+router.get('/register', showUserRegistrationForm);
+router.post('/register', processUserRegistrationForm);
+router.get('/login', showLoginForm);
+router.post('/login', processLoginForm);
+router.get('/logout', processLogout);
 
 export default router;

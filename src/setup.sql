@@ -18,6 +18,12 @@ CREATE TABLE category (
     category_name VARCHAR(150) NOT NULL
 );
 
+CREATE TABLE roles (
+    role_id SERIAL PRIMARY KEY,
+    role_name VARCHAR(50) UNIQUE NOT NULL,
+    role_description TEXT
+);
+
 -- 3. Create Project Table
 CREATE TABLE project (
     project_id SERIAL PRIMARY KEY,
@@ -45,3 +51,7 @@ INSERT INTO project (title, description, date, organization_id, category_id) VAL
 ('Youth Tutoring Drive', 'Help tutor local high school students in math and science.', '2026-08-15', 1, 1),
 ('Downtown Park Cleanup', 'Join us to clean up the downtown park and plant new trees.', '2026-08-22', 2, 2),
 ('Food Bank Distribution', 'Volunteer to pack and distribute meals to families in need.', '2026-08-29', 3, 3);
+
+INSERT INTO roles (role_name, role_description) VALUES 
+    ('user', 'Standard user with basic access'),
+    ('admin', 'Administrator with full system access');
