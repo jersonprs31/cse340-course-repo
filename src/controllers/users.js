@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { createUser, authenticateUser } from '../models/users.js';
+import { createUser, authenticateUser, getAllUsers } from '../models/users.js';
 
 const showUserRegistrationForm = (req, res) => {
     res.render('register', { title: 'Register' });
@@ -14,7 +14,7 @@ const processUserRegistrationForm = async (req, res) => {
         const userId = await createUser(name, email, passwordHash);
         
         req.flash('success', 'Registration successful! Please log in.');
-        res.redirect('/login'); // It's better UX to redirect to login after registering
+        res.redirect('/login');
     } catch (error) {
         console.error('Error registering user:', error);
         res.redirect('/register');
@@ -38,7 +38,6 @@ const processLoginForm = async (req, res) => {
                 console.log('User logged in:', user);
             }
 
-           
             res.redirect('/dashboard');
         } else {
             req.flash('error', 'Invalid email or password.');
@@ -60,8 +59,6 @@ const processLogout = async (req, res) => {
     res.redirect('/login');
 };
 
-
-
 const requireLogin = (req, res, next) => {
     if (!req.session || !req.session.user) {
         req.flash('error', 'You must be logged in to access that page.');
@@ -79,6 +76,30 @@ const showDashboard = (req, res) => {
     });
 };
 
+const requireRole = (role) => {
+    return (req, res, next) => {
+        if (req.session && req.session.user && req.session.user.role === role) {
+            return next();
+        }
+        req.flash('error', 'Access denied. Admin permissions required.');
+        return res.redirect('/dashboard');
+    };
+};
+
+const showUserList = async (req, res) => {
+    try {
+        const users = await getAllUsers();
+        res.render('users', { 
+            title: 'Registered Users', 
+            users: users 
+        });
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        req.flash('error', 'Could not load users.');
+        res.redirect('/dashboard');
+    }
+};
+
 export { 
     showUserRegistrationForm, 
     processUserRegistrationForm,
@@ -86,5 +107,7 @@ export {
     processLoginForm,
     processLogout,
     requireLogin,
-    showDashboard
+    showDashboard,
+    requireRole,
+    showUserList
 };

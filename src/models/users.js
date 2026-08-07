@@ -1,14 +1,14 @@
 import db from './db.js';
-import bcrypt from 'bcrypt'; // Added to compare passwords
+import bcrypt from 'bcrypt';
 
 const createUser = async (name, email, passwordHash) => {
-    const default_role = 'user';
+    const defaultRole = 'user'; 
     const query = `
         INSERT INTO users (name, email, password_hash, role_id) 
         VALUES ($1, $2, $3, (SELECT role_id FROM roles WHERE role_name = $4)) 
         RETURNING user_id
     `;
-    const queryParams = [name, email, passwordHash, default_role];
+    const queryParams = [name, email, passwordHash, defaultRole];
     
     const result = await db.query(query, queryParams);
 
@@ -23,13 +23,12 @@ const createUser = async (name, email, passwordHash) => {
     return result.rows[0].user_id;
 };
 
-
-
 const findUserByEmail = async (email) => {
     const query = `
-        SELECT user_id, name, email, password_hash, role_id 
-        FROM users 
-        WHERE email = $1
+        SELECT u.user_id, u.name, u.email, u.password_hash, r.role_name AS role 
+        FROM users u
+        JOIN roles r ON u.role_id = r.role_id
+        WHERE u.email = $1
     `;
     const queryParams = [email];
     
@@ -55,12 +54,22 @@ const authenticateUser = async (email, password) => {
     const isPasswordCorrect = await verifyPassword(password, user.password_hash);
     
     if (isPasswordCorrect) {
-        delete user.password_hash; // Remove the hash for security before saving to session
+        delete user.password_hash; 
         return user;
     }
     
     return null;
 };
 
+const getAllUsers = async () => {
+    const query = `
+        SELECT u.name, u.email, r.role_name AS role 
+        FROM users u
+        JOIN roles r ON u.role_id = r.role_id
+        ORDER BY u.name ASC
+    `;
+    const result = await db.query(query);
+    return result.rows;
+};
 
-export { createUser, authenticateUser };
+export { createUser, authenticateUser, findUserByEmail, verifyPassword, getAllUsers };

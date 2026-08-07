@@ -11,5 +11,17 @@
         <p><strong>Name:</strong> <%= name %></p>
         <p><strong>Email (Username):</strong> <%= email %></p>
     </div>
+
+    <% if (locals.user && locals.user.role === 'admin') { %>
+        <div class="admin-links" style="background: #e9ecef; padding: 20px; border-radius: 8px; margin-top: 20px;">
+            <h2>Admin Actions</h2>
+            <ul>
+                <li><a href="/users">View All Users</a></li>
+                <li><a href="/new-project">Create New Project</a></li>
+                <li><a href="/new-category">Create New Category</a></li>
+                <li><a href="/new-organization">Create New Organization</a></li>
+            </ul>
+        </div>
+    <% } %>
 </main>
 <%- include('partials/footer') %>
