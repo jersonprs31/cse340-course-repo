@@ -3,9 +3,11 @@
         <div class="project-details">
             <h1><%= project.title %></h1>
             
-            <p style="margin-top: -10px; margin-bottom: 20px;">
-                <a href="/edit-project/<%= project.project_id %>" style="font-weight: bold; color: #0056b3; text-decoration: none;">[ Edit Project ]</a>
-            </p>
+            <% if (locals.user && locals.user.role === 'admin') { %>
+                <p style="margin-top: -10px; margin-bottom: 20px;">
+                    <a href="/edit-project/<%= project.project_id %>" style="font-weight: bold; color: #0056b3; text-decoration: none;">[ Edit Project ]</a>
+                </p>
+            <% } %>
             
             <p><strong>Date:</strong> <%= project.date.toDateString() %></p>
             
@@ -37,9 +39,11 @@
             <div class="category-tags" style="margin-bottom: 1rem;">
                 <p><strong>This project belongs to the following categories:</strong></p>
                 
-                <p style="margin-top: 5px; margin-bottom: 15px;">
-                    <a href="/project/<%= project.project_id %>/assign-categories" style="font-size: 0.9em; font-weight: bold; color: #0056b3; text-decoration: none;">[ Manage Categories ]</a>
-                </p>
+                <% if (locals.user && locals.user.role === 'admin') { %>
+                    <p style="margin-top: 5px; margin-bottom: 15px;">
+                        <a href="/project/<%= project.project_id %>/assign-categories" style="font-size: 0.9em; font-weight: bold; color: #0056b3; text-decoration: none;">[ Manage Categories ]</a>
+                    </p>
+                <% } %>
 
                 <ul style="list-style-type: none; padding: 0;">
                     <% if (categories && categories.length > 0) { %>

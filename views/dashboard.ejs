@@ -19,7 +19,7 @@
             <ul>
                 <% volunteeredProjects.forEach(project => { %>
                     <li style="margin-bottom: 10px;">
-                        <a href="/project/<%= project.project_id %>"><strong><%= project.project_name %></strong></a>
+                        <a href="/project/<%= project.project_id %>"><strong><%= project.title %></strong></a>
                         &nbsp; | &nbsp; 
                         <a href="/project/<%= project.project_id %>/unvolunteer" style="color: red; font-size: 0.9em;">Remove Volunteer</a>
                     </li>
