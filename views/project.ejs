@@ -3,14 +3,12 @@
         <div class="project-details">
             <h1><%= project.title %></h1>
             
-            <!-- Edit Button/Link -->
             <p style="margin-top: -10px; margin-bottom: 20px;">
                 <a href="/edit-project/<%= project.project_id %>" style="font-weight: bold; color: #0056b3; text-decoration: none;">[ Edit Project ]</a>
             </p>
             
             <p><strong>Date:</strong> <%= project.date.toDateString() %></p>
             
-            <!-- Location and Venue -->
             <p><strong>Location:</strong> <%= project.location %></p>
             <p><strong>Venue:</strong> <%= project.venue %></p>
             
@@ -18,15 +16,24 @@
                 <strong>Partner Organization:</strong> 
                 <a href="/organization/<%= project.organization_id %>"><%= project.organization_name %></a>
             </p>
+
+            <% if (locals.user) { %>
+                <div class="volunteer-actions" style="margin-top: 20px; padding: 15px; background: #eef2f5; border-radius: 8px;">
+                    <% if (locals.isVolunteering) { %>
+                        <p><strong>✓ You are volunteering for this project.</strong></p>
+                        <a href="/project/<%= project.project_id %>/unvolunteer" class="btn btn-danger" style="color: red;">Remove me as a volunteer</a>
+                    <% } else { %>
+                        <a href="/project/<%= project.project_id %>/volunteer" class="btn btn-primary">Volunteer for this project</a>
+                    <% } %>
+                </div>
+            <% } %>
             
             <div class="description">
                 <p><%= project.description %></p>
             </div>
 
-            <!-- Divider Line -->
             <hr style="margin: 30px 0; border: 0; border-top: 1px solid #ccc;">
 
-            <!-- Category Tags Section -->
             <div class="category-tags" style="margin-bottom: 1rem;">
                 <p><strong>This project belongs to the following categories:</strong></p>
                 

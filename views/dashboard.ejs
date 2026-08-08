@@ -12,6 +12,24 @@
         <p><strong>Email (Username):</strong> <%= email %></p>
     </div>
 
+    <div class="volunteer-list" style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin-top: 20px;">
+        <h2>Projects I'm Volunteering For</h2>
+        
+        <% if (locals.volunteeredProjects && volunteeredProjects.length > 0) { %>
+            <ul>
+                <% volunteeredProjects.forEach(project => { %>
+                    <li style="margin-bottom: 10px;">
+                        <a href="/project/<%= project.project_id %>"><strong><%= project.project_name %></strong></a>
+                        &nbsp; | &nbsp; 
+                        <a href="/project/<%= project.project_id %>/unvolunteer" style="color: red; font-size: 0.9em;">Remove Volunteer</a>
+                    </li>
+                <% }) %>
+            </ul>
+        <% } else { %>
+            <p>You have not signed up to volunteer for any projects yet.</p>
+        <% } %>
+    </div>
+
     <% if (locals.user && locals.user.role === 'admin') { %>
         <div class="admin-links" style="background: #e9ecef; padding: 20px; border-radius: 8px; margin-top: 20px;">
             <h2>Admin Actions</h2>

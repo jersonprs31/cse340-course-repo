@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import { createUser, authenticateUser, getAllUsers } from '../models/users.js';
+import { getVolunteeredProjectsByUser } from '../models/projects.js';
 
 const showUserRegistrationForm = (req, res) => {
     res.render('register', { title: 'Register' });
@@ -16,7 +17,6 @@ const processUserRegistrationForm = async (req, res) => {
         req.flash('success', 'Registration successful! Please log in.');
         res.redirect('/login');
     } catch (error) {
-        console.error('Error registering user:', error);
         res.redirect('/register');
     }
 };
@@ -33,18 +33,12 @@ const processLoginForm = async (req, res) => {
         if (user) {
             req.session.user = user;
             req.flash('success', 'Login successful!');
-
-            if (process.env.NODE_ENV === 'development') {
-                console.log('User logged in:', user);
-            }
-
             res.redirect('/dashboard');
         } else {
             req.flash('error', 'Invalid email or password.');
             res.redirect('/login');
         }
     } catch (error) {
-        console.error('Error during login:', error);
         req.flash('error', 'An error occurred during login. Please try again.');
         res.redirect('/login');
     }
@@ -67,14 +61,22 @@ const requireLogin = (req, res, next) => {
     next(); 
 };
 
-const showDashboard = (req, res) => {
+const showDashboard = async (req, res) => {
     const user = req.session.user;
-    res.render('dashboard', { 
-        title: 'Dashboard',
-        name: user.name,
-        email: user.email,
-        user: user
-    });
+    try {
+        const volunteeredProjects = await getVolunteeredProjectsByUser(user.user_id);
+        
+        res.render('dashboard', { 
+            title: 'Dashboard',
+            name: user.name,
+            email: user.email,
+            user: user,
+            volunteeredProjects: volunteeredProjects 
+        });
+    } catch (error) {
+        req.flash('error', 'Could not load your volunteered projects.');
+        res.redirect('/');
+    }
 };
 
 const requireRole = (role) => {
@@ -95,7 +97,6 @@ const showUserList = async (req, res) => {
             users: users 
         });
     } catch (error) {
-        console.error('Error fetching users:', error);
         req.flash('error', 'Could not load users.');
         res.redirect('/dashboard');
     }

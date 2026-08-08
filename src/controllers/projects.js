@@ -1,4 +1,4 @@
-import { getUpcomingProjects, getProjectDetails, addProject, updateProject, getProjectCategories, updateProjectCategories } from '../models/projects.js';
+import { getUpcomingProjects, getProjectDetails, addProject, updateProject, getProjectCategories, updateProjectCategories, addVolunteer, removeVolunteer, checkIsVolunteer } from '../models/projects.js';
 import { getAllOrganizations } from '../models/organizations.js';
 import { getAllCategories } from '../models/categories.js';
 
@@ -21,11 +21,20 @@ const showProjectDetailsPage = async (req, res, next) => {
         }
 
         const categories = await getProjectCategories(projectId);
+        let isVolunteering = false;
+        let user = null;
         
+        if (req.session && req.session.user) {
+            user = req.session.user;
+            isVolunteering = await checkIsVolunteer(projectId, user.user_id);
+        }
+
         res.render('project', { 
             title: project.title, 
             project,
-            categories
+            categories,
+            isVolunteering,
+            user
         });
     } catch (error) {
         next(error);
@@ -118,6 +127,38 @@ const processAssignCategoriesForm = async (req, res, next) => {
     }
 };
 
+const processVolunteer = async (req, res) => {
+    const projectId = req.params.id;
+    const userId = req.session.user.user_id;
+
+    try {
+        await addVolunteer(projectId, userId);
+        req.flash('success', 'You are now volunteering for this project!');
+    } catch (error) {
+        req.flash('error', 'Could not sign up to volunteer.');
+    }
+    res.redirect(`/project/${projectId}`);
+};
+
+const processUnvolunteer = async (req, res) => {
+    const projectId = req.params.id;
+    const userId = req.session.user.user_id;
+
+    try {
+        await removeVolunteer(projectId, userId);
+        req.flash('success', 'You have been removed as a volunteer.');
+    } catch (error) {
+        req.flash('error', 'Could not remove volunteer status.');
+    }
+    
+    const referer = req.get('Referrer');
+    if (referer && referer.includes('/dashboard')) {
+        res.redirect('/dashboard');
+    } else {
+        res.redirect(`/project/${projectId}`);
+    }
+};
+
 export { 
     showProjectsPage, 
     showProjectDetailsPage, 
@@ -126,5 +167,7 @@ export {
     showEditProjectForm, 
     processEditProjectForm,
     showAssignCategoriesForm,
-    processAssignCategoriesForm
+    processAssignCategoriesForm,
+    processVolunteer,
+    processUnvolunteer
 };

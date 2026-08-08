@@ -8,7 +8,9 @@ import {
     showEditProjectForm,
     processEditProjectForm,
     showAssignCategoriesForm,
-    processAssignCategoriesForm
+    processAssignCategoriesForm,
+    processVolunteer,
+    processUnvolunteer
 } from './controllers/projects.js';
 
 import { 
@@ -51,6 +53,8 @@ router.get('/edit-project/:id', requireLogin, requireRole('admin'), showEditProj
 router.post('/edit-project/:id', requireLogin, requireRole('admin'), processEditProjectForm);
 router.get('/project/:id/assign-categories', requireLogin, requireRole('admin'), showAssignCategoriesForm);
 router.post('/project/:id/assign-categories', requireLogin, requireRole('admin'), processAssignCategoriesForm);
+router.get('/project/:id/volunteer', requireLogin, processVolunteer);
+router.get('/project/:id/unvolunteer', requireLogin, processUnvolunteer);
 
 router.get('/categories', showCategoriesPage);
 router.get('/new-category', requireLogin, requireRole('admin'), showNewCategoryForm);
